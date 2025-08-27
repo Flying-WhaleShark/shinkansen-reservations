@@ -1,0 +1,50 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
+
+<div class="container">
+    <div class="question-title">
+        <h1>{{ question.question_text }}</h1>
+    </div>
+
+    <!-- Display data from the QuestionParagraph model -->
+    {% for paragraph in question.paragraphs.all %}
+        <p class="paragraph">{{ paragraph.paragraph_text }}</p>
+    {% endfor %}
+
+    <form action="{% url 'myapp:submit_answer' question.id %}" method="post">
+        {% csrf_token %}
+
+        <!-- Display choices for each ChoiceCategory -->
+        {% for category in question.choice_categories.all %}
+            <div class="category">
+                <h2>{{ category.name }}</h2>
+                {% if category.name == 'Radio Buttons' %}
+                    {% for choice in category.choice_set.all %}
+                        <div class="choice-item">
+                            <input type="radio" name="radio_choice" id="radio_{{ choice.id }}" value="{{ choice.id }}">
+                            <label for="radio_{{ choice.id }}">{{ choice.choice_text }}</label>
+                        </div>
+                    {% endfor %}
+                {% elif category.name == 'Checkboxes' %}
+                    {% for choice in category.choice_set.all %}
+                        <div class="choice-item">
+                            <input type="checkbox" name="checkbox_choices" id="checkbox_{{ choice.id }}" value="{{ choice.id }}">
+                            <label for="checkbox_{{ choice.id }}">{{ choice.choice_text }}</label>
+                        </div>
+                    {% endfor %}
+                {% elif category.name == 'Select Option' %}
+                    <select name="select_option" class="select-option">
+                        <option value="">Please select</option>
+                        {% for choice in category.choice_set.all %}
+                            <option value="{{ choice.id }}">{{ choice.choice_text }}</option>
+                        {% endfor %}
+                    </select>
+                {% elif category.name == 'Text Area' %}
+                    <textarea name="text_area_answer" class="text-area" rows="10" placeholder="Enter your answer here"></textarea>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <input type="submit" value="Submit Answer" class="submit-button">
+    </form>
+</div>
