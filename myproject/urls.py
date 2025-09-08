@@ -23,4 +23,5 @@ urlpatterns = [
     # myapp/urls.pyで定義されたすべてのURLパターンが、
     # 'myapp/'というプレフィックスの下に含められます。
     path('myapp/', include('myapp.urls')),
+    path('reservation/', include('reservation.urls')),  # この行を追加
 ]

@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',  # ここを修正します
+    'reservation'
 ]
 
 MIDDLEWARE = [
